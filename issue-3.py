@@ -23,7 +23,8 @@ Y(i,j)는 A(i,j), B(i,j), C(i,j), D(i,j), ..., J(i,j)의 중간값입니다.
 import pprint
 
 DATA_FILE = "./data/randfile.txt"
-MX = [[float(0) for x in range(10)] for y in range(10)]
+LEN = 20
+MX = [[float(0) for x in range(LEN)] for y in range(LEN)]
 
 def test():
 
@@ -32,11 +33,18 @@ def test():
         for row, line in enumerate(f):
             value_pos, mark_pos, pos_pipe, col = 0, 0, 0, 0
             for s in line:
-                if ',' == s:        
-                    MX[row][col] = float(line[:value_pos])
-                    col += 1
+                if ',' == s:
+                    if col > 0:
+                        MX[row][col] = float(line[mark_pos+1:mark_pos+value_pos])
+                    else:
+                        MX[row][col] = float(line[mark_pos:mark_pos+value_pos])
+
+                    #MX[row][col] = float(line[mark_pos:mark_pos+value_pos])
+                    col += 1; mark_pos += value_pos; value_pos = 0
+
+                if col == LEN:
                     break;
-                 
+                
                 value_pos += 1
             
     pprint.pprint(MX)           
