@@ -21,32 +21,90 @@ Y(i,j)는 A(i,j), B(i,j), C(i,j), D(i,j), ..., J(i,j)의 중간값입니다.
 5,3;3,1|
 '''
 import pprint
+import os
 
 DATA_FILE = "./data/randfile.txt"
-MX = [[float(0) for x in range(10)] for y in range(10)]
+LEN = 200
 
-def test():
-
-    with open(DATA_FILE, "r") as f:
-        
-        for row, line in enumerate(f):
-            value_pos, mark_pos, pos_pipe, col = 0, 0, 0, 0
+def make_matrix():
+    MX10 = []
+    
+    # with open('{}{}'.format(os.getcwd(),DATA_FILE), "r") as f:
+    with open(DATA_FILE, 'r') as f:
+        invalid = 0
+        for num, line in enumerate(f):
+            # print '{}-{}'.format(num, len(line))
+            MX = [[0.0 for x in range(LEN)] for y in range(LEN)]
+            value_pos, start_pos, mark_pos, value, col, row = 0, 0, 0, 0.0, 0, 0
             for s in line:
-                if ',' == s:        
-                    MX[row][col] = float(line[:value_pos])
-                    col += 1
-                    break;
-                 
-                value_pos += 1
-            
-    pprint.pprint(MX)           
-            
-def get_value(s):
-    
-    
+                if row > 0 or col > 0:
+                    start_pos = mark_pos + 1
 
-    print lines
-test()
+                if ',' == s: # 200
+                    try:
+                        value = float(line[start_pos:value_pos+mark_pos])
+                    except:
+                        invalid += 1
+                    MX[row][col] = value
+                    col += 1; mark_pos += value_pos; value_pos = 0                      
+                elif ';' == s: # 200
+                    try:
+                        value = float(line[start_pos:value_pos+mark_pos])
+                    except:
+                        invalid += 1
+                    MX[row][col] = value                  
+                    row += 1; col = 0; mark_pos += value_pos; value_pos = 0
+                elif '|' == s: # 10
+                    try:
+                        value = float(line[start_pos:value_pos+mark_pos])
+                    except:
+                        invalid += 1
+                    MX[row][col] = value
+                    mark_pos += value_pos; value_pos = 0
+                    MX10.append(MX)
+                    # print '{} end of line..................\n'.format(num), value
+                    break;
+     
+                value_pos += 1
+
+    # print "sum of invalid is: ", invalid
+    return MX10
+
+def get_eachvalue(mxs, r, c):
+    entry, sm = [], 0.0
+    
+    for e in mxs:
+        sm += e[r][c]
+        entry.append(e[r][c])
+
+    entry.sort()
+    m = (max(entry) + min(entry)) / 2
+    gaps = []
+    for value in entry[1:8]: # except max and min value from entry
+        gaps.append(abs(m - value))
+
+    middle = min(gaps)
+    index = gaps.index(middle)
+    
+    return (sm / len(mxs)), entry[index+1] # average, middle
+    
+def get_result(mxs):
+    AVG = [[float(0) for x in range(LEN)] for y in range(LEN)]
+    MID = [[float(0) for x in range(LEN)] for y in range(LEN)]
+
+    for r in range(len(AVG)):
+        for c in range(len(AVG[r])):
+            AVG[r][c], MID[r][c] = get_eachvalue(mxs, r, c)
+            
+    print "Average values of the Matrix are: ", AVG[199]
+    print "Middle values of the Matrix are: ", MID[198]
+                
+if __name__ == '__main__':
+    mxs = make_matrix()
+    get_result(mxs)
+
+    
+    
         
 
 
