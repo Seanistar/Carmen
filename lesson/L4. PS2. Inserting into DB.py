@@ -17,7 +17,14 @@ if __name__ == "__main__":
     client = MongoClient("mongodb://localhost:27017")
     db = client.examples
 
-    with open('./data/arachnid.json') as f:
-        data = json.loads(f.read())
-        insert_data(data, db)
-        print db.arachnid.find_one()
+    # with open('../data/arachnid.json') as f:
+    with open('../data/sts.json') as f:
+        try:
+            # data = json.loads(f.read())
+            data = json.loads(f.read())
+            # insert_data(data, db)
+            # print db.arachnid.find_one()
+            print data
+        except ValueError as e:
+            print e
+
