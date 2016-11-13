@@ -19,7 +19,6 @@ def parse_array(v):
     return [v]
 
 def update_db(data, db):
-
     for entry in data:
         value1, value2 = [], []
         try:
@@ -35,14 +34,12 @@ def update_db(data, db):
             print 'updating failed...'
 
 def find_data(db):
-        
     data = db.cities.find({})
 
     return data
     
     
 def test():
-    
     from pymongo import MongoClient
     client = MongoClient("mongodb://localhost:27017")
     db = client['examples']
@@ -52,6 +49,6 @@ def test():
 
     # pprint.pprint(data)
     print "updating is successufl!"
-    
+
 if __name__ == "__main__":
-    test()
+    #test()
