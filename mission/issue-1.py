@@ -9,70 +9,23 @@ c) 다시 반복되는 숫자가 많은 크기대로 다시 정렬한다. 예를
 
 import random
 import pprint
+from collections import defaultdict
 #import issue_2 as i2
 #from ..useful import sorting
 
-
 G_2X16 = 2**16
 G_2X12 = 2**12
+G_2X09 = 2**9
 G_2X04 = 2**4
-
-def make_hexdec(num):
-    data = []
-    #f = open('hexdec.dat', 'w')
-    for i in range(num):
-        r = random.randint(1, G_2X16)
-        #data.append(r)
-        yield r
-        #f.write(str(r)+' ')
-    #f.close()
-    #return data
-
-def make_hexdecsort():
-    pass
-
-def make_hexdecsize():
-    pass
-
-def sort_items(data):
-    tosort = []
-    tosort.append(data[0])
-
-    for i in range(1, len(data)):
-        idx = compute_index(tosort, data[i])
-        if idx == -1:
-            tosort.append(data[i])
-        else:
-            tosort.insert(idx, data[i])
-        
-    return tosort
-
-# if x is between t1 and t2, return will be 0
-# x larger than t2, return will be 1
-# x smaller than t1, return will be -1
-def compute_index(data, x):
-    if x < data[0]:
-        return 0
-    elif x > data[-1]:
-        return -1
-
-    idx = 0
-    while idx < len(data):
-        if x >= data[idx] and x <= data[idx+1]:
-            return idx + 1
-        idx += 1
-
-    #to do is using binary sort     
-    return idx
     
 def sort_data(data):
     mx = [[] for i in range(100)]
-    for i in range(len(data)):
-        n = data[i] / (G_2X16 / 10) # number of bucket is 10 
+    for i, _ in enumerate(data):
+        n = data[i] / (G_2X09 / 10) # number of bucket is 1/10
         mx[n].append(data[i])
 
     sorted_mx = []
-    for i in range(len(mx)):
+    for i, _ in enumerate(mx):
         quick_sort(mx[i])
         sorted_mx += mx[i]
         
@@ -97,7 +50,7 @@ def quick_sort(items):
         items[:] = smaller_items + [items[pivot_index]] + larger_items
         
 def write_file(filename, data):
-    with open(filename, 'wb') as f:
+    with open(filename, 'w') as f:
         f.write(data)    
 
 def number_mapper(data):
@@ -105,28 +58,43 @@ def number_mapper(data):
     for number in data:
         yield (number, 1)
 
+def report_counts(data):
+    result = defaultdict(list)
+    for number, count in data:
+        result[count].append(number)
+
+    report = {}
+    for count, numbers in result.iteritems():
+        report[count] = len(numbers)
+        
+    return result, report
+    
 def number_reducer(num, counts):
     yield (num, sum(counts))
     
 def assemble_same_size(data):
-    from collections import defaultdict
     collector = defaultdict(list)
 
     for num, count in number_mapper(data):
         collector[num].append(count)
 
     return [result
-            for num, counts in collector.items()
+            for num, counts in collector.iteritems()
             for result in number_reducer(num, counts)]
-       
+
+def group_sort(data):
+    for key in reversed(data.keys()):
+        for num in data[key]:
+            yield [num]*int(key)
+      
 if __name__ == '__main__':
     #sample = [534, 893, 751, 1819, 1793, 586, 1531, 3140, 49, 2143]
     #to = [49, 534, 586, 751, 893, 1531, 1793, 1819, 2143, 3140]
-    #print sort_items(sample)
+    #print quick_sort(sample)
 
     # a. generate random number and save to hexDec.bin
-    data = [random.randint(1, G_2X16) for _ in range(1000)] # 1000**2
-    #write_file('hexdec.bin', "%s\n" % data)
+    data = [random.randint(1, G_2X09) for _ in range(1000)] # 1000**2
+    #write_file('hexdec.dat', "%s\n" % data)
 
     # b. to ascending sort above created array by using 1/10 array to data and save to hexDecSort.bin
     sorted_data = sort_data(data)    
@@ -134,18 +102,9 @@ if __name__ == '__main__':
 
     # c. resort by size that count an appearance frequency and save to hexDecSizeSort.bin
     group_data = assemble_same_size(sorted_data)
-    #write_file('hexDecSizeSort.dat', "%s\n" % group_data)
-    print group_data[][1]
-
-    '''
-    #f = open('./data/sorted_list.dat','w')
-    for i in range(len(mx)):
-        #mx[i].sort()
-        item = sort_items(mx[i])
-        print item
-        #for n in range(len(mx[i])):
-            #f.write(str(mx[i][n])+' ')
-    #f.close()
-    '''
-
+    group_data, report = report_counts(group_data)
+    print report
+    group_sort_data = group_sort(group_data)
+    #print group_sort_data
+    #write_file('hexDecSizeSort.dat', "%s\n" % list(group_sort_data))
 
