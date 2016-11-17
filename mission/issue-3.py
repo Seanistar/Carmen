@@ -93,14 +93,15 @@ def get_eachvalue(mxs, r, c):
 
 # now, I can tell those means between mean and median. whenever I see above code, feel so nervous, embrassed and frustrated
 def get_mean_and_median(mxs, r, c):
-    entry, sm = [], 0.0
+    ''' entry, sm = [], 0.0
     for e in mxs:
         sm += e[r][c]
-        entry.append(e[r][c])
+        entry.append(e[r][c]) '''
+    entry = [e[r][c] for e in mxs]
     entry.sort()
 
-    mean = sm / len(entry)
-    # cause entry length would be 10 unconditionally
+    mean = sum(entry) / len(entry)
+    # cause entry length would be 10 unconditionally (if len(entry) % 2 = 0)
     median = (entry[(len(entry)/2)-1] + entry[len(entry)/2]) / 2
     # if entry is odd, median value should be len(entry)/2
 
@@ -109,15 +110,18 @@ def get_mean_and_median(mxs, r, c):
 def get_result(mxs):
     AVG = [[.0 for _ in range(LEN)] for _ in range(LEN)]
     MDN = [[.0 for _ in range(LEN)] for _ in range(LEN)]
+    #MDN = AVG[:]
 
-    for r in range(len(AVG)):
-        for c in range(len(AVG[r])):
+    for r in range(LEN):
+        for c in range(LEN)):
             # AVG[r][c], MDN[r][c] = get_eachvalue(mxs, r, c)
             AVG[r][c], MDN[r][c] = get_mean_and_median(mxs, r, c)
             
     print "Mean values of the Matrix are: ", AVG[199]
     print "Median values of the Matrix are: ", MDN[198]
-                
+
+
+               
 if __name__ == '__main__':
     mxs = make_matrix()
     get_result(mxs)
