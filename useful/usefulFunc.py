@@ -88,10 +88,12 @@ def find_smallest(L):
     print "smallest index is: %d and value is : %d" % (min_idx, min_value)
 
 # calculate taking times to find 'v'(value) from the 'L'(list)            
-def time_it(f, v, L):
+def time_it(f, L, v = None):
     import time
+    
     t1 = time.time()
-    f(v, L)
+    if v != None: f(v, L)
+    else: f(L)
     t2 = time.time()
 
     return (t2 - t1) * 1000
