@@ -14,20 +14,29 @@ def test_sqrt():
 
 def test_sorting():
     import random
-    random_items = [random.randint(1, 100) for c in range(1000)]
+    random_items = [random.randint(1, 100) for _ in range(100)]
 
     log = logging.getLogger('SORT')
     log.info('Before')
     #log.info(random_items)
 
-    sorts = {"Bubble":sort.bubble_sort, "Insertion":sort.insertion_sort, "Built-In":sorted,
-             "Merge":sort.merge_sort, "Quick":sort.quick_sort, "Heap":sort.heap_sort}
+    sorts = { "Bubble":sort.bubble_sort, "Insertion":sort.insertion_sort, "Built-In":sorted,
+              "Merge":sort.merge_sort, "Quick":sort.quick_sort, "Heap":sort.heap_sort }
     
-    for key, value in sorts.iteritems():
+    for key, _ in sorts.iteritems():
         items = random_items[:]
         time = uf.time_it(sorts[key], items)
         log.info('After ' + key + ': ' + str(time))
         #log.info(items)
+
+'''  INFO:SORT: size of 100 | 1,000 | 10,000
+     Insertion: 0.878810882568 | 92.4010276794 | 9639.51587677
+     Built-In:  0.025033950805 | 0.28395652771 | 3.4019947052
+     Merge:     0.546216964722 | 7.10797309875 | 88.497877121
+     Heap:      0.375986099243 | 5.29217720032 | 70.8267688751
+     Quick:     0.375032424927 | 6.17504119873 | 188.364982605
+     Bubble:    1.16610527039  | 112.60509491  | 11508.1179142
+'''
 
 if __name__ == "__main__":
 
