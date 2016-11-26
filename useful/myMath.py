@@ -29,7 +29,7 @@ def f_factorial(n = 1):
 def f_fibonacci(n):
     c, a = 0, 1 # current, after
     for i in range(n):
-        yield a
+        yield a # return as generate
         c, a = a, c + a
     #return c
 
