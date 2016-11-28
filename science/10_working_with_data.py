@@ -14,7 +14,7 @@ def parse_rows_with(reader, parsers):
 def try_or_none(fn):
     def fn_or_none(x):
         try: return fn(x)
-        except: print x; return None
+        except: return None
     return fn_or_none
 
 def try_parse_field(field_name, value, parser_dict):
@@ -69,6 +69,7 @@ def overall_change(changes):
 if __name__ == "__main__":
     import dateutil.parser as dp
     import csv
+    import pprint
     
     data = []
     '''
@@ -80,7 +81,6 @@ if __name__ == "__main__":
             if any(x is None for x in row):
                 print row
     '''
-
     with open("../scratch/stocks.txt", "rb") as f:         
         reader = csv.DictReader(f, delimiter='\t')
         data = [parse_dict(row, {'symbol':str, 'date':dp.parse, 'closing_price':float})
@@ -107,7 +107,10 @@ if __name__ == "__main__":
                                        lambda rows:max(pluck('closing_price', rows)))
 
         # key is symbol, value is list of "change" dicts
-        changes_by_symbol = group_by(picker("symbol"), data, day_over_day_changes)
+        changes_by_symbol = group_by(picker("symbol"),
+                                     data,
+                                     day_over_day_changes)
+        
         # collect all "change" dicts into one big list
         all_changes = [change
                        for changes in changes_by_symbol.values()
@@ -120,7 +123,7 @@ if __name__ == "__main__":
         overall_change_by_month = group_by(lambda row: row['date'].month,
                                            all_changes,
                                            overall_change)
-        print overall_change_by_month
-
+        pprint.pprint(overall_change_by_month)
+        
 
         
