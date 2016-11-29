@@ -20,7 +20,7 @@ ridership_df = pd.DataFrame(
 # Change False to True for each block of code to see what it does
 
 # DataFrame creation
-if False:
+if True:
     # You can create a DataFrame out of a dictionary mapping column names to values
     df_1 = pd.DataFrame({'A': [0, 1, 2], 'B': [3, 4, 5]})
     print df_1

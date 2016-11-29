@@ -10,7 +10,7 @@ if False:
     print df1 + df2
     
 # Adding DataFrames with overlapping column names 
-if False:
+if True:
     df1 = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [7, 8, 9]})
     df2 = pd.DataFrame({'d': [10, 20, 30], 'c': [40, 50, 60], 'b': [70, 80, 90]})
     print df1 + df2
