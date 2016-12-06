@@ -63,8 +63,13 @@ def ordered_search(index, ranks, keyword):
     if not pages:
         return None
 
+    #sorted_ranks = sort_index_by_rank(ranks)
+    #return [pages for key,_ in sorted_ranks.iteritems() if key in pages]
     return quick_sort_index(pages, ranks)
 
+def sort_index_by_rank(ranks):
+    return dict(sorted(ranks.items(), key=lambda (key,value): value, reverse=True))
+    
 def quick_sort(items):
     if len(items) <= 1: return # it have already done to sort
     #''' in case list type
@@ -312,7 +317,7 @@ def compute_ranks(graph):
 
 index, graph = crawl_web('http://udacity.com/cs101x/urank/index.html')
 ranks = compute_ranks(graph)
-
+#print ranks
 #print lucky_search(index, ranks, 'Hummus')
 #>>> http://udacity.com/cs101x/urank/kathleen.html
 
